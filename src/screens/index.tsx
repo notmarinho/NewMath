@@ -1,16 +1,16 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import AppStackScreens from './app';
+import AuthStackScreen from './auth';
 
 const Navigation = () => {
+  const [user] = useState(null);
+
   return (
-    <View style={styles.flex1}>
-      <Text>Navigation</Text>
-    </View>
+    <NavigationContainer>
+      {user ? <AppStackScreens /> : <AuthStackScreen />}
+    </NavigationContainer>
   );
 };
 
 export default Navigation;
-
-const styles = StyleSheet.create({
-  flex1: {flex: 1},
-});
