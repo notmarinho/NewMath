@@ -1,8 +1,12 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 
 // Non Authenticated
 export type AuthStackParamsList = {
   SignIn: undefined;
+  SignUp: undefined;
 };
 
 export type AuthScreenProps<T extends keyof AuthStackParamsList> =
@@ -15,3 +19,9 @@ export type AppStackParamsList = {
 
 export type AppScreenProps<T extends keyof AppStackParamsList> =
   NativeStackScreenProps<AppStackParamsList, T>;
+
+export type StackScreen<S = unknown> = {
+  name: keyof S;
+  component: any;
+  options?: NativeStackNavigationOptions;
+};
