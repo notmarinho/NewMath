@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "319618103870",
-    "project_id": "new-math-82135",
-    "storage_bucket": "new-math-82135.appspot.com"
+    "project_number": "330131376392",
+    "project_id": "newmath-75eac",
+    "storage_bucket": "newmath-75eac.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319618103870:android:5d7e6be4f5d228ccf2ef6f",
+        "mobilesdk_app_id": "1:330131376392:android:c19f0da7f065d4213784bd",
         "android_client_info": {
           "package_name": "com.new_math"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAfJRScalSDl5WSmlKiIKA1pX35FsRHO44"
+          "current_key": "AIzaSyChY_FYiffTaMdHfX4z8Gb0f815vD1OdOE"
         }
       ],
       "services": {
