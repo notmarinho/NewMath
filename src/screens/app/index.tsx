@@ -2,7 +2,8 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './Home/HomeScreen';
 import {AppStackParamsList, StackScreen} from '../types';
-import {CustomNavigationBar} from '../../components';
+import {BottomBar} from '../../components';
+import {NavigationContainer} from '@react-navigation/native';
 
 const AppStack = createNativeStackNavigator<AppStackParamsList>();
 
@@ -11,20 +12,7 @@ const screens: StackScreen<AppStackParamsList>[] = [
 ];
 
 const AppStackScreens = () => {
-  return (
-    <AppStack.Navigator initialRouteName="Home">
-      {screens.map(screen => (
-        <AppStack.Screen
-          key={screen.name}
-          name={screen.name}
-          component={screen.component}
-          options={{
-            header: CustomNavigationBar,
-          }}
-        />
-      ))}
-    </AppStack.Navigator>
-  );
+  return <BottomBar />;
 };
 
 export default AppStackScreens;
