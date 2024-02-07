@@ -1,27 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppStackScreens from './app';
 import AuthStackScreen from './auth';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useAuth} from '../context';
 
 const RootStack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-
-  function onAuthStateChanged(nextUser: FirebaseAuthTypes.User | null) {
-    setUser(nextUser);
-    if (initializing) {
-      setInitializing(false);
-    }
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
+  const {user} = useAuth();
 
   return (
     <NavigationContainer>

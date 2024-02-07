@@ -16,7 +16,7 @@ export const DefaultColors = {
     onError: 'rgb(255, 255, 255)',
     errorContainer: 'rgb(255, 218, 214)',
     onErrorContainer: 'rgb(65, 0, 2)',
-    background: 'rgb(250, 253, 251)',
+    background: 'rgba(242, 234, 211, 1)',
     onBackground: 'rgb(25, 28, 27)',
     surface: 'rgb(250, 253, 251)',
     onSurface: 'rgb(25, 28, 27)',
@@ -39,7 +39,7 @@ export const DefaultColors = {
     },
     surfaceDisabled: 'rgba(25, 28, 27, 0.12)',
     onSurfaceDisabled: 'rgba(25, 28, 27, 0.38)',
-    backdrop: 'rgba(41, 50, 49, 0.4)',
+    backdrop: 'rgba(41, 50, 49, 0.6)',
   },
 };
 

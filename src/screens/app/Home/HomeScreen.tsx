@@ -1,22 +1,58 @@
-import {Button, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import React, {FC} from 'react';
 
-import auth from '@react-native-firebase/auth';
+import {AppScreenProps} from '../../types';
+import {useTheme, IconButton} from 'react-native-paper';
+import {useAuth} from '../../../context';
+import {Text} from '../../../components';
 
-const HomeScreen = () => {
-  const signOut = () => {
-    auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
-  };
+type ScreenProps = AppScreenProps<'Home'>;
+
+const HomeScreen: FC<ScreenProps> = ({navigation}) => {
+  const theme = useTheme();
+
+  const {user} = useAuth();
 
   return (
-    <View>
-      <Button title="Sair" onPress={signOut} />
+    <View
+      style={[styles.container, {backgroundColor: theme.colors.background}]}>
+      <View style={styles.userHeaderContainer}>
+        <View style={styles.userHeaderPhoto} />
+        <Text style={styles.userHeaderName}>{user?.displayName}</Text>
+        <IconButton
+          icon="cog"
+          size={26}
+          style={styles.cogIcon}
+          onPress={() => navigation.navigate('Settings')}
+        />
+      </View>
     </View>
   );
 };
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  userHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userHeaderPhoto: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    borderWidth: 1,
+  },
+  userHeaderName: {
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  cogIcon: {
+    marginLeft: 'auto',
+  },
+});
