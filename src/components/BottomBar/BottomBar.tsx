@@ -1,11 +1,7 @@
 import React, {useState, useRef, useCallback, useMemo, useEffect} from 'react';
 import {View, TouchableOpacity, Animated, StyleSheet} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeScreen from '../../screens/app/Home/HomeScreen';
-import Settings from '../../screens/app/Settings/Settings';
 
-const Tab = createBottomTabNavigator();
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const circleDiameter = 80; // Tornar isto uma constante global para facilitar ajustes
 
@@ -89,17 +85,6 @@ const CustomTabBar = ({
   );
 };
 
-// ... Tab.Navigator e estilos permanecem inalterados
-
-const MyTabs = () => {
-  return (
-    <Tab.Navigator tabBar={props => <CustomTabBar {...props} />}>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Settings" component={Settings} />
-    </Tab.Navigator>
-  );
-};
-
 const createStyles = (circleDiameter: number) =>
   StyleSheet.create({
     container: {
@@ -140,4 +125,4 @@ const createStyles = (circleDiameter: number) =>
     },
   });
 
-export default MyTabs;
+export default CustomTabBar;

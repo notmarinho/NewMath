@@ -1,18 +1,24 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import HomeScreen from './Home/HomeScreen';
-import {AppStackParamsList, StackScreen} from '../types';
-import {BottomBar} from '../../components';
-import {NavigationContainer} from '@react-navigation/native';
+import {AppStackParamsList} from '../types';
 
-const AppStack = createNativeStackNavigator<AppStackParamsList>();
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Settings from './Settings/Settings';
+import CustomTabBar from '../../components/BottomBar/BottomBar';
+const Tab = createBottomTabNavigator<AppStackParamsList>();
 
-const screens: StackScreen<AppStackParamsList>[] = [
-  {name: 'Home', component: HomeScreen},
-];
+// const screens: StackScreen<AppStackParamsList>[] = [
+//   {name: 'Home', component: HomeScreen},
+// ];
 
 const AppStackScreens = () => {
-  return <BottomBar />;
+  return (
+    <Tab.Navigator tabBar={props => <CustomTabBar {...props} />}>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Settings" component={Settings} />
+    </Tab.Navigator>
+  );
 };
 
 export default AppStackScreens;
