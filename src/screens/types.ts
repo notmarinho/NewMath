@@ -15,6 +15,8 @@ export type AuthScreenProps<T extends keyof AuthStackParamsList> =
 // Authenticated
 export type AppStackParamsList = {
   Home: undefined;
+  Onboarding: undefined;
+  StartTest: undefined;
   Settings: undefined;
 };
 
