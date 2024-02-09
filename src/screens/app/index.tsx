@@ -6,6 +6,8 @@ import {AppStackParamsList, StackScreen} from '../types';
 import Onboarding from './Onboarding/Onboarding';
 import StartTest from './Onboarding/StartTest';
 import Settings from './Settings/Settings';
+import QuestionaryScreen from './Questionary/QuestionaryScreen';
+import {withTheme} from 'react-native-paper';
 
 const AppStack = createNativeStackNavigator<AppStackParamsList>();
 
@@ -14,6 +16,7 @@ const screens: StackScreen<AppStackParamsList>[] = [
   {name: 'Onboarding', component: Onboarding},
   {name: 'StartTest', component: StartTest},
   {name: 'Settings', component: Settings},
+  {name: 'Questionary', component: QuestionaryScreen},
 ];
 
 const AppStackScreens = () => {
@@ -25,7 +28,7 @@ const AppStackScreens = () => {
         <AppStack.Screen
           key={screen.name}
           name={screen.name}
-          component={screen.component}
+          component={withTheme(screen.component)}
         />
       ))}
     </AppStack.Navigator>

@@ -2,7 +2,7 @@ import {StyleSheet, View} from 'react-native';
 import React, {FC} from 'react';
 
 import {AppScreenProps} from '../../types';
-import {useTheme, IconButton} from 'react-native-paper';
+import {useTheme, IconButton, TouchableRipple} from 'react-native-paper';
 import {useAuth} from '../../../context';
 import {Text} from '../../../components';
 
@@ -26,6 +26,12 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
           onPress={() => navigation.navigate('Settings')}
         />
       </View>
+
+      <TouchableRipple
+        onPress={() => navigation.navigate('Questionary')}
+        style={{marginTop: 20, padding: 20, borderRadius: 10}}>
+        <Text>Start Questionary</Text>
+      </TouchableRipple>
     </View>
   );
 };
