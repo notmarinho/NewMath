@@ -2,6 +2,7 @@ import {
   NativeStackNavigationOptions,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import {MD3Theme} from 'react-native-paper';
 
 // Non Authenticated
 export type AuthStackParamsList = {
@@ -18,10 +19,11 @@ export type AppStackParamsList = {
   Onboarding: undefined;
   StartTest: undefined;
   Settings: undefined;
+  Questionary: undefined;
 };
 
 export type AppScreenProps<T extends keyof AppStackParamsList> =
-  NativeStackScreenProps<AppStackParamsList, T>;
+  NativeStackScreenProps<AppStackParamsList, T> & {theme: MD3Theme};
 
 export type StackScreen<S = unknown> = {
   name: keyof S;
