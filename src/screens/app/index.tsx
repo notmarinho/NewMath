@@ -7,6 +7,8 @@ import HomeScreen from './Home/HomeScreen';
 import Onboarding from './Onboarding/Onboarding';
 import StartTest from './Onboarding/StartTest';
 import Settings from './Settings/Settings';
+import QuestionaryScreen from './Questionary/QuestionaryScreen';
+import {withTheme} from 'react-native-paper';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
@@ -18,6 +20,7 @@ const screens: StackScreen<AppStackParamsList>[] = [
   {name: 'Onboarding', component: Onboarding},
   {name: 'StartTest', component: StartTest},
   {name: 'Settings', component: Settings},
+  {name: 'Questionary', component: QuestionaryScreen},
 ];
 
 const AppStackScreens = () => {
@@ -30,7 +33,7 @@ const AppStackScreens = () => {
         <Tab.Screen
           key={screen.name}
           name={screen.name}
-          component={screen.component}
+          component={withTheme(screen.component)}
         />
       ))}
     </Tab.Navigator>
