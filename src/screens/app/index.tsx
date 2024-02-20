@@ -13,13 +13,15 @@ import {withTheme} from 'react-native-paper';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import CustomTabBar from '../../components/BottomBar/BottomBar';
+import Forum from './Forum/Forum';
 const Tab = createBottomTabNavigator<AppStackParamsList>();
 
 const screens: StackScreen<AppStackParamsList>[] = [
   {name: 'Home', component: HomeScreen},
   {name: 'Onboarding', component: Onboarding},
+  {name: 'Forum', component: Forum},
   {name: 'StartTest', component: StartTest},
-  {name: 'Settings', component: Settings},
+  // {name: 'Settings', component: Settings},
   {name: 'Questionary', component: QuestionaryScreen},
 ];
 
@@ -27,7 +29,7 @@ const AppStackScreens = () => {
   return (
     <Tab.Navigator
       tabBar={props => <CustomTabBar {...props} />}
-      initialRouteName="Onboarding"
+      initialRouteName="Home"
       screenOptions={{headerShown: false}}>
       {screens.map(screen => (
         <Tab.Screen

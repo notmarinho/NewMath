@@ -35,6 +35,10 @@ const CustomTabBar = ({
     animateIcons();
   }, [state.index, animateIcons]);
 
+  useEffect(() => {
+    animateSlider(state.index);
+  }, [state.index]);
+
   const animateSlider = useCallback(
     (index: number) => {
       Animated.spring(translating, {
@@ -59,7 +63,20 @@ const CustomTabBar = ({
       />
       {state.routes.map((route: any, index: number) => {
         const isFocused = state.index === index;
-        const icon = route.name === 'Home' ? 'home' : 'settings-outline';
+        const icon =
+          route.name === 'Home'
+            ? 'home'
+            : route.name === 'Onboarding'
+            ? 'book'
+            : route.name === 'StartTest'
+            ? 'flask'
+            : route.name === 'Settings'
+            ? 'settings'
+            : route.name === 'Questionary'
+            ? 'pencil-sharp'
+            : route.name === 'Forum'
+            ? 'chatbox-sharp'
+            : 'home';
 
         const onPress = () => {
           animateSlider(index);
