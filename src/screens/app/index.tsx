@@ -1,37 +1,44 @@
 import React from 'react';
+import {withTheme} from 'react-native-paper';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+// Importações dos componentes das telas
 import HomeScreen from './Home/HomeScreen';
-import {AppStackParamsList, StackScreen} from '../types';
-// import {CustomNavigationBar} from '../../components';
 import Onboarding from './Onboarding/Onboarding';
 import StartTest from './Onboarding/StartTest';
-import Settings from './Settings/Settings';
-import QuestionaryScreen from './Questionary/QuestionaryScreen';
-import {withTheme} from 'react-native-paper';
+import CustomTabBar from '../../components/BottomBar/BottomBar';
+import Forum from './Forum/Forum';
+import CreateForumTopic from './CreateForumTopic/CreateForumTopic';
 
-const AppStack = createNativeStackNavigator<AppStackParamsList>();
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-const screens: StackScreen<AppStackParamsList>[] = [
-  {name: 'Home', component: HomeScreen},
-  {name: 'Onboarding', component: Onboarding},
-  {name: 'StartTest', component: StartTest},
-  {name: 'Settings', component: Settings},
-  {name: 'Questionary', component: QuestionaryScreen},
-];
+const ForumStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Forum"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Forum" component={withTheme(Forum)} />
+      <Stack.Screen
+        name="CreateForumTopic"
+        component={withTheme(CreateForumTopic)}
+      />
+    </Stack.Navigator>
+  );
+};
 
 const AppStackScreens = () => {
   return (
-    <AppStack.Navigator
-      initialRouteName="Onboarding"
+    <Tab.Navigator
+      tabBar={props => <CustomTabBar {...props} />}
+      initialRouteName="Home"
       screenOptions={{headerShown: false}}>
-      {screens.map(screen => (
-        <AppStack.Screen
-          key={screen.name}
-          name={screen.name}
-          component={withTheme(screen.component)}
-        />
-      ))}
-    </AppStack.Navigator>
+      <Tab.Screen name="Home" component={withTheme(HomeScreen)} />
+      <Tab.Screen name="Onboarding" component={withTheme(Onboarding)} />
+      <Tab.Screen name="ForumStack" component={ForumStack} />
+      <Tab.Screen name="StartTest" component={withTheme(StartTest)} />
+    </Tab.Navigator>
   );
 };
 

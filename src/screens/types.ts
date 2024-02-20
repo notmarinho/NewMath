@@ -17,9 +17,13 @@ export type AuthScreenProps<T extends keyof AuthStackParamsList> =
 export type AppStackParamsList = {
   Home: undefined;
   Onboarding: undefined;
+  ForumStack: undefined;
+  ForumStackScreens: undefined;
+  Forum: undefined;
   StartTest: undefined;
   Settings: undefined;
   Questionary: {subject: string};
+  CreateForumTopic: undefined;
 };
 
 export type AppScreenProps<T extends keyof AppStackParamsList> =
