@@ -1,5 +1,5 @@
 import {StyleSheet, View, TouchableOpacity, SectionList} from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, useMemo} from 'react';
 
 import {AppScreenProps} from '../../types';
 import {useTheme, IconButton, Button} from 'react-native-paper';
@@ -15,11 +15,24 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
   const {userData} = useAuth();
   const {levels, subjects} = useQuestions();
 
-  const allQuestionsCount = subjects.reduce(
-    (acc, subject) => acc + subject.questions.length,
-    0,
-  );
-  const allQuestionsAnsweredCount = userData?.answers_ids.length || 0;
+  const allQuestionsCount = useMemo(() => {
+    if (subjects) {
+      const sanitizedSubjects = subjects.filter(subject => !!subject.questions);
+      return sanitizedSubjects.reduce(
+        (acc, subject) => acc + subject.questions.length,
+        0,
+      );
+    }
+    return 0;
+  }, [subjects]);
+
+  const allQuestionsAnsweredCount = useMemo(() => {
+    if (userData?.answers_ids) {
+      return userData.answers_ids.length;
+    }
+    return 0;
+  }, [userData]);
+
   const percentage = (
     (allQuestionsAnsweredCount / allQuestionsCount) *
     100
@@ -67,7 +80,10 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
             <SectionList
               sections={levels.map(level => ({
                 title: level.title,
-                data: subjects.filter(subject => subject.level_id === level.id),
+                data: subjects.filter(
+                  subject =>
+                    subject.level_id === level.id && !!subject.questions,
+                ),
               }))}
               keyExtractor={(item, index) => `${item}-${index}`}
               renderItem={({item}) => {
