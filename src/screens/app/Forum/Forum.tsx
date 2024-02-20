@@ -23,6 +23,7 @@ const Forum: FC<ScreenProps> = () => {
   const [selected, setSelected] = useState<number>(0);
   const [search, setSearch] = useState<string>('');
   const [filteredCardList, setFilteredCardList] = useState(initialCardList);
+  const [refreshing, setRefreshing] = useState(false);
 
   const onAddPress = () => navigation.navigate('CreateForumTopic');
 
@@ -48,10 +49,11 @@ const Forum: FC<ScreenProps> = () => {
       } catch (error) {
         console.error('Erro ao buscar tópicos: ', error);
       }
+      setRefreshing(false);
     };
 
     fetchTopics();
-  }, [search]);
+  }, [search, refreshing]);
 
   return (
     <View style={styles.container}>
@@ -65,7 +67,11 @@ const Forum: FC<ScreenProps> = () => {
         />
       </View>
       <ForumFilter selected={selected} setSelected={setSelected} />
-      <ForumCardList data={filteredCardList} />
+      <ForumCardList
+        data={filteredCardList}
+        refreshing={refreshing}
+        setRefreshing={setRefreshing}
+      />
       <TouchableOpacity style={styles.addButton} onPress={onAddPress}>
         <Icon name="plus" size={35} color="black" />
       </TouchableOpacity>

@@ -10,6 +10,7 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import {Background, HeaderScreen} from '../../../components';
 import {useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 
 type Props = {};
 
@@ -17,6 +18,8 @@ const CreateForumTopic: FC<Props> = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const navigation = useNavigation();
+  const user = auth().currentUser;
+
 
   const postTopic = async () => {
     if (title.trim() === '' || description.trim() === '') {
@@ -29,6 +32,7 @@ const CreateForumTopic: FC<Props> = () => {
         title,
         description,
         createdAt: firestore.FieldValue.serverTimestamp(),
+        userId: user?.uid,
       });
 
       setTitle('');
