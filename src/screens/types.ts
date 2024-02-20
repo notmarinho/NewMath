@@ -19,7 +19,7 @@ export type AppStackParamsList = {
   Onboarding: undefined;
   StartTest: undefined;
   Settings: undefined;
-  Questionary: undefined;
+  Questionary: {subject: string};
 };
 
 export type AppScreenProps<T extends keyof AppStackParamsList> =

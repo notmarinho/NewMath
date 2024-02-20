@@ -2,6 +2,7 @@ import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {AppError} from '../../../types';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import {Button, TextInput} from 'react-native-paper';
 
@@ -74,7 +75,11 @@ const SignUpScreen = () => {
   const handleRegisterSuccess = (
     nextUser: FirebaseAuthTypes.UserCredential,
   ) => {
-    console.log('User account created & signed in!');
+    firestore().collection('users').doc(nextUser.user.uid).set({
+      name,
+      email,
+      levels_completed: [],
+    });
 
     nextUser.user.updateProfile({
       displayName: name,
