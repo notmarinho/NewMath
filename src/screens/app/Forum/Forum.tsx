@@ -30,12 +30,22 @@ const Forum: FC<ScreenProps> = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const snapshot = await firestore().collection('topics').get();
+        // Ordena os documentos pelo campo 'createdAt' em ordem descendente
+        const snapshot = await firestore()
+          .collection('topics')
+          .orderBy('createdAt', 'desc')
+          .get();
+
         const topicsList = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
+          // Assegura que o campo 'createdAt' seja convertido corretamente, se necessário
+          createdAt: doc.data().createdAt?.toDate
+            ? doc.data().createdAt.toDate()
+            : doc.data().createdAt,
         }));
 
+        // Aplica a filtragem, se houver pesquisa
         if (search) {
           const filteredData = topicsList.filter(
             card =>
