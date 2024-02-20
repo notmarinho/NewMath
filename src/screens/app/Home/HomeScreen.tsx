@@ -1,13 +1,8 @@
-import {StyleSheet, View, FlatList, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, SectionList} from 'react-native';
 import React, {FC} from 'react';
 
 import {AppScreenProps} from '../../types';
-import {
-  useTheme,
-  IconButton,
-  TouchableRipple,
-  Button,
-} from 'react-native-paper';
+import {useTheme, IconButton, Button} from 'react-native-paper';
 import {useAuth} from '../../../context';
 import {Text} from '../../../components';
 import {useQuestions} from '../../../hooks';
@@ -17,15 +12,25 @@ type ScreenProps = AppScreenProps<'Home'>;
 const HomeScreen: FC<ScreenProps> = ({navigation}) => {
   const theme = useTheme();
 
-  const {user} = useAuth();
-  const {levels} = useQuestions();
+  const {userData} = useAuth();
+  const {levels, subjects} = useQuestions();
+
+  const allQuestionsCount = subjects.reduce(
+    (acc, subject) => acc + subject.questions.length,
+    0,
+  );
+  const allQuestionsAnsweredCount = userData?.answers_ids.length || 0;
+  const percentage = (
+    (allQuestionsAnsweredCount / allQuestionsCount) *
+    100
+  ).toFixed(0);
 
   return (
     <View
       style={[styles.container, {backgroundColor: theme.colors.background}]}>
       <View style={styles.userHeaderContainer}>
         <View style={styles.userHeaderPhoto} />
-        <Text style={styles.userHeaderName}>{user?.displayName}</Text>
+        <Text style={styles.userHeaderName}>{userData?.name}</Text>
         <IconButton
           icon="cog"
           size={26}
@@ -40,7 +45,18 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
             styles.resumeContainer,
             {backgroundColor: theme.colors.primary},
           ]}>
-          <View style={styles.resumeHeader} />
+          <View style={styles.resumeHeader}>
+            <View
+              style={[
+                styles.totalPercentageContainer,
+                {
+                  backgroundColor: theme.colors.background,
+                  borderColor: theme.colors.onSurface,
+                },
+              ]}>
+              <Text style={styles.totalPercentageText}>{percentage}%</Text>
+            </View>
+          </View>
           <View
             style={[
               styles.resumeBody,
@@ -48,38 +64,63 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
                 backgroundColor: theme.colors.background,
               },
             ]}>
-            <FlatList
-              data={levels}
-              contentContainerStyle={styles.listContainer}
-              renderItem={({item}) => (
-                <View>
-                  {item.subjects.map((subject, i) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate('Questionary', {
-                          subject: subject.title,
-                        })
-                      }
-                      key={`${subject.title}-${i}`}
-                      style={styles.subjectItem}>
-                      <View
-                        style={[
-                          styles.subjectItemBox,
-                          {backgroundColor: theme.colors.primary},
-                        ]}
-                      />
+            <SectionList
+              sections={levels.map(level => ({
+                title: level.title,
+                data: subjects.filter(subject => subject.level_id === level.id),
+              }))}
+              keyExtractor={(item, index) => `${item}-${index}`}
+              renderItem={({item}) => {
+                const totalQuestions = item.questions.length;
+                const completedQuestions =
+                  userData?.answers_ids.filter(id =>
+                    item.questions.map(question => question.id).includes(id),
+                  ).length || 0;
 
-                      <Text
-                        style={[
-                          {color: theme.colors.onPrimaryContainer},
-                          styles.subjectItemText,
-                        ]}>
-                        {subject.title}
+                const percentage = (
+                  (completedQuestions / totalQuestions) *
+                  100
+                ).toFixed(0);
+
+                const isCompleted = !!userData?.finished_subjects_ids.includes(
+                  item.id,
+                );
+
+                return (
+                  <TouchableOpacity
+                    disabled={isCompleted}
+                    onPress={() =>
+                      navigation.navigate('Questionary', {
+                        subject_id: item.id,
+                      })
+                    }
+                    style={styles.subjectItem}>
+                    <View
+                      style={[
+                        styles.subjectItemBox,
+                        {backgroundColor: theme.colors.primary},
+                      ]}>
+                      <Text style={{color: theme.colors.onPrimaryContainer}}>
+                        {isCompleted && '✅'}
                       </Text>
-                      <Text>0%</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                    </View>
+
+                    <Text
+                      style={[
+                        {
+                          color: theme.colors.onPrimaryContainer,
+                        },
+                        styles.subjectItemText,
+                        isCompleted && styles.completedItemText,
+                      ]}>
+                      {item.title}
+                    </Text>
+                    <Text>{isCompleted ? '100%' : `${percentage}%`}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+              renderSectionHeader={({section: {title}}) => (
+                <Text style={styles.sectionHeaderTitle}>{title}</Text>
               )}
             />
           </View>
@@ -134,10 +175,45 @@ const styles = StyleSheet.create({
     height: 44,
     alignItems: 'center',
   },
+  totalPercentageContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 5,
+    shadowColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+    elevation: 11,
+    transform: [
+      {
+        translateY: -45,
+      },
+    ],
+  },
+  totalPercentageText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  sectionHeaderTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    paddingHorizontal: 12,
+  },
   subjectItemText: {
     flex: 1,
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  completedItemText: {
+    textDecorationLine: 'line-through',
+    fontWeight: '400',
   },
   subjectItemBox: {
     width: 35,
@@ -161,7 +237,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     gap: 20,
-    borderWidth: 1,
+    justifyContent: 'flex-end',
   },
   resumeBody: {
     alignSelf: 'stretch',

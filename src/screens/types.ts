@@ -22,7 +22,7 @@ export type AppStackParamsList = {
   Forum: undefined;
   StartTest: undefined;
   Settings: undefined;
-  Questionary: {subject: string};
+  Questionary: {subject_id: string};
   CreateForumTopic: undefined;
 };
 

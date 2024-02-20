@@ -2,31 +2,53 @@ import {useState, useEffect} from 'react';
 import {useAuth} from '../context';
 import firestore from '@react-native-firebase/firestore';
 
-import {Levels} from '../types';
+type Level = {
+  id: string;
+  title: string;
+};
+
+type Subject = {
+  id: string;
+  level_id: string;
+  title: string;
+  questions: Question[];
+};
+
+type Question = {
+  id: string;
+  answer: string;
+  options: string[];
+  title: string;
+  type: 'fechada';
+};
 
 const useQuestions = () => {
   const {user} = useAuth();
-  const [levels, setLevels] = useState<Levels[]>([]);
+  const [levels, setLevels] = useState<Level[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
-  const getQuestions = async () => {
-    if (!user) {
-      return [];
-    }
+  const getLevels = async () => {
+    const nextLevels = await firestore().collection('levels').get();
+    setLevels(nextLevels.docs.map(doc => doc.data() as Level));
+  };
 
-    const questions = (await firestore()
-      .collection('questions')
-      .get()
-      .then(res => res.docs.map(doc => doc.data()))) as Levels[];
-
-    setLevels(questions);
+  const getSubjects = async () => {
+    const nextSubjects = await firestore().collection('subjects').get();
+    setSubjects(nextSubjects.docs.map(doc => doc.data() as Subject));
   };
 
   useEffect(() => {
-    getQuestions();
-  }, []);
+    if (!user?.uid) {
+      return;
+    }
+
+    getLevels();
+    getSubjects();
+  }, [user?.uid]);
 
   return {
     levels,
+    subjects,
   };
 };
 

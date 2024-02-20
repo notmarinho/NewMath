@@ -1,11 +1,11 @@
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import React, {FC, useEffect} from 'react';
-import {MultipleQuestionType} from '../../types';
 import Text from '../Text/Text';
 import {useTheme} from 'react-native-paper';
+import {Question} from '../../types';
 
 type Props = {
-  question: MultipleQuestionType;
+  question: Question;
   setAnswer: (answer: string) => void;
 };
 
