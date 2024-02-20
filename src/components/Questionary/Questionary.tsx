@@ -24,9 +24,6 @@ const Questionary = ({questions}: {questions: Question[]}) => {
   const totalQuestions = questions.length;
 
   const navigateToNextPage = () => {
-    pagerRef.current?.setPage(page + 1);
-    setPage(prevPage => prevPage + 1);
-
     if (answer === '') {
       Alert.alert('Resposta vazia', 'Digite uma resposta', [{text: 'OK'}]);
       return;
