@@ -1,4 +1,4 @@
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Text as RNText} from 'react-native';
 import React, {FC, useEffect} from 'react';
 import Text from '../Text/Text';
 import {useTheme} from 'react-native-paper';
@@ -34,11 +34,21 @@ const MultipleQuestion: FC<Props> = ({question, setAnswer}) => {
             },
           ]}
           onPress={() => setSelectedAnswer(option)}>
-          <Text
-            type="largeTitle"
-            color={selectedAnswer === option ? 'background' : 'primary'}>
+          <RNText
+            adjustsFontSizeToFit
+            numberOfLines={3}
+            style={[
+              styles.answerText,
+              {
+                fontWeight: selectedAnswer === option ? 'bold' : 'normal',
+                color:
+                  selectedAnswer === option
+                    ? theme.colors.background
+                    : theme.colors.primary,
+              },
+            ]}>
             {option}
-          </Text>
+          </RNText>
         </TouchableOpacity>
       ))}
     </View>
@@ -52,6 +62,9 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 20,
     fontWeight: 'bold',
+  },
+  answerText: {
+    fontSize: 14,
   },
   option: {
     marginBottom: 10,
