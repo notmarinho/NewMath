@@ -6,3 +6,4 @@ export {default as MultipleQuestionType} from './MultipleQuestion/MultipleQuesti
 export {default as OpenQuestionType} from './OpenQuestion/OpenQuestion';
 export {default as HeaderScreen} from './HeaderScreen/HeaderScreen';
 export {default as ForumFilter} from './ForumFilter/ForumFilter';
+export {default as Background} from './Background/Background';

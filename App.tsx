@@ -7,7 +7,7 @@ import AppTheme from './src/theme';
 
 import Navigation from './src/screens';
 import {store} from './src/store/redux';
-import {useColorScheme} from 'react-native';
+import {StatusBar, useColorScheme} from 'react-native';
 import {AuthProvider} from './src/context';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
@@ -15,18 +15,21 @@ function App(): JSX.Element {
   const colorScheme = useColorScheme();
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <PaperProvider
-        theme={colorScheme === 'dark' ? AppTheme.dark : AppTheme.default}>
-        <SafeAreaProvider>
-          <AuthProvider>
-            <ReduxProvider store={store}>
-              <Navigation />
-            </ReduxProvider>
-          </AuthProvider>
-        </SafeAreaProvider>
-      </PaperProvider>
-    </GestureHandlerRootView>
+    <>
+      <StatusBar hidden />
+      <GestureHandlerRootView style={{flex: 1}}>
+        <PaperProvider
+          theme={colorScheme === 'dark' ? AppTheme.dark : AppTheme.default}>
+          <SafeAreaProvider>
+            <AuthProvider>
+              <ReduxProvider store={store}>
+                <Navigation />
+              </ReduxProvider>
+            </AuthProvider>
+          </SafeAreaProvider>
+        </PaperProvider>
+      </GestureHandlerRootView>
+    </>
   );
 }
 
