@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {Background, HeaderScreen} from '../../../components';
+import {Background, HeaderScreen} from '../../../../components';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 
@@ -19,7 +19,6 @@ const CreateForumTopic: FC<Props> = () => {
   const [description, setDescription] = useState('');
   const navigation = useNavigation();
   const user = auth().currentUser;
-
 
   const postTopic = async () => {
     if (title.trim() === '' || description.trim() === '') {

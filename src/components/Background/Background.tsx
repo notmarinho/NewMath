@@ -3,10 +3,13 @@ import React, {FC} from 'react';
 
 type BackgroundProps = {
   children: React.ReactNode;
+  style?: object; // Indica que o style é um objeto, o que é mais preciso do que "any"
 };
 
-const Background: FC<BackgroundProps> = ({children}) => {
-  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
+const Background: FC<BackgroundProps> = ({children, style}) => {
+  return (
+    <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>
+  );
 };
 
 export default Background;

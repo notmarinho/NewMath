@@ -1,38 +1,39 @@
-import {
-  Alert,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {FC} from 'react';
+import {Background, HeaderScreen} from '../../../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
 
-interface ForumCardListProps {
-  data: any;
-  refreshing: boolean;
-  setRefreshing: (value: boolean) => void;
-}
+type ForumTopicOpenedProps = {
+  route: {
+    params: {
+      item: {
+        title: string;
+        description: string;
+        stars: number;
+        userId: string;
+        id: string;
+      };
+    };
+  };
+};
 
-const ForumCardList: FC<ForumCardListProps> = ({
-  data,
-  refreshing,
-  setRefreshing,
-}) => {
+const ForumTopicOpened: FC<ForumTopicOpenedProps> = ({route}) => {
   const navigation = useNavigation();
   const user = auth().currentUser;
-
   const userUid = user?.uid;
+
+  const {item} = route.params;
+
+  console.log('item', item.title);
 
   const deleteTopic = async (topicId: string) => {
     try {
       await firestore().collection('topics').doc(topicId).delete();
       Alert.alert('Tópico deletado com sucesso!');
-      setRefreshing(true);
+      navigation.goBack();
       // Aqui, você pode querer atualizar a lista para refletir a deleção
     } catch (error) {
       console.error('Erro ao deletar tópico: ', error);
@@ -40,24 +41,12 @@ const ForumCardList: FC<ForumCardListProps> = ({
     }
   };
 
-  const openTopic = (item: any) => {
-    // Aqui, você pode querer navegar para a tela de tópico aberto
-    navigation.navigate('ForumTopicOpened', {item});
-  };
-
-  const onRefresh = () => {
-    setRefreshing(true);
-  };
-
   return (
-    <FlatList
-      contentContainerStyle={styles.contentContainer}
-      data={data}
-      onRefresh={onRefresh} // Adiciona a função de atualização
-      refreshing={refreshing}
-      renderItem={({item}) => (
-        <TouchableOpacity style={styles.card} onPress={() => openTopic(item)}>
-          <View style={styles.body}>
+    <Background style={styles.container}>
+      <HeaderScreen title="Tópico" hasBackButton />
+      <View style={styles.body}>
+        <View style={styles.card}>
+          <View>
             <Text numberOfLines={2} style={styles.title}>
               {item.title}
             </Text>
@@ -76,17 +65,21 @@ const ForumCardList: FC<ForumCardListProps> = ({
               </TouchableOpacity>
             )}
           </View>
-        </TouchableOpacity>
-      )}
-    />
+        </View>
+      </View>
+    </Background>
   );
 };
 
-export default ForumCardList;
+export default ForumTopicOpened;
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    padding: 20,
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  body: {
+    paddingHorizontal: 20,
   },
   card: {
     backgroundColor: '#678983',
@@ -95,9 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     gap: 10,
   },
-  body: {
-    flex: 1,
-  },
+
   footer: {
     justifyContent: 'space-between',
     alignItems: 'center',

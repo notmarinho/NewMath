@@ -8,9 +8,10 @@ import HomeScreen from './Home/HomeScreen';
 import Onboarding from './Onboarding/Onboarding';
 import StartTest from './Onboarding/StartTest';
 import CustomTabBar from '../../components/BottomBar/BottomBar';
-import Forum from './Forum/Forum';
-import CreateForumTopic from './CreateForumTopic/CreateForumTopic';
+import Forum from './Forum/Forum/Forum';
+import CreateForumTopic from './Forum/CreateForumTopic/CreateForumTopic';
 import Settings from './Settings/Settings';
+import ForumTopicOpened from './Forum/ForumTopicOpened/ForumTopicOpened';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,10 @@ const ForumStack = () => {
       <Stack.Screen
         name="CreateForumTopic"
         component={withTheme(CreateForumTopic)}
+      />
+      <Stack.Screen
+        name="ForumTopicOpened"
+        component={withTheme(ForumTopicOpened)}
       />
     </Stack.Navigator>
   );

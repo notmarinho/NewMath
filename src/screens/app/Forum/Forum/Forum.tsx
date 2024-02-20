@@ -1,10 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
 import {StyleSheet, View, TextInput, TouchableOpacity} from 'react-native';
-import {ForumFilter, HeaderScreen} from '../../../components';
-import ForumCardList from '../../../components/ForumCardList/ForumCardList';
+import {ForumFilter, HeaderScreen} from '../../../../components';
+import ForumCardList from '../../../../components/ForumCardList/ForumCardList';
 import Icon from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
-import {AppScreenProps} from '../../types';
+import {AppScreenProps} from '../../../types';
 import firestore from '@react-native-firebase/firestore';
 
 const initialCardList = [
@@ -16,9 +16,7 @@ const initialCardList = [
   },
 ];
 
-type ScreenProps = AppScreenProps<'Forum'>;
-
-const Forum: FC<ScreenProps> = () => {
+const Forum = () => {
   const navigation = useNavigation();
   const [selected, setSelected] = useState<number>(0);
   const [search, setSearch] = useState<string>('');
