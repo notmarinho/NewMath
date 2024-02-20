@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {StyleSheet, View, TextInput, TouchableOpacity} from 'react-native';
 import {ForumFilter, HeaderScreen} from '../../../components';
 import ForumCardList from '../../../components/ForumCardList/ForumCardList';
 import Icon from 'react-native-vector-icons/Entypo';
+import {useNavigation} from '@react-navigation/native';
+import {AppScreenProps} from '../../types';
 
 const initialCardList = [
   {
@@ -13,10 +15,15 @@ const initialCardList = [
   },
 ];
 
-const Forum = () => {
+type ScreenProps = AppScreenProps<'Forum'>;
+
+const Forum: FC<ScreenProps> = () => {
+  const navigation = useNavigation();
   const [selected, setSelected] = useState<number>(0);
   const [search, setSearch] = useState<string>('');
   const [filteredCardList, setFilteredCardList] = useState(initialCardList);
+
+  const onAddPress = () => navigation.navigate('CreateForumTopic');
 
   useEffect(() => {
     if (search) {
@@ -44,11 +51,7 @@ const Forum = () => {
       </View>
       <ForumFilter selected={selected} setSelected={setSelected} />
       <ForumCardList data={filteredCardList} />
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => {
-          /* Adicione a ação para adicionar novo post */
-        }}>
+      <TouchableOpacity style={styles.addButton} onPress={onAddPress}>
         <Icon name="plus" size={35} color="black" />
       </TouchableOpacity>
     </View>

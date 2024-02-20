@@ -74,7 +74,7 @@ const CustomTabBar = ({
             ? 'settings'
             : route.name === 'Questionary'
             ? 'pencil-sharp'
-            : route.name === 'Forum'
+            : route.name === 'ForumStack'
             ? 'chatbox-sharp'
             : 'home';
 

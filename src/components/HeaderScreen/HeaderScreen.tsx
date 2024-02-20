@@ -1,20 +1,33 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {FC} from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/AntDesign';
+import UserIcon from 'react-native-vector-icons/FontAwesome';
+
+import {useNavigation} from '@react-navigation/native';
 
 type Props = {
   title: string;
+  hasBackButton?: boolean;
 };
 
-const HeaderScreen: FC<Props> = ({title}) => {
+const HeaderScreen: FC<Props> = ({title, hasBackButton}) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
-      <View style={styles.textBox}>
+      <View style={[styles.textBox, hasBackButton && styles.withBackButton]}>
+        {hasBackButton && (
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name="leftcircle" size={40} color="#678983" />
+          </TouchableOpacity>
+        )}
         <Text style={styles.text}>{title}</Text>
       </View>
-      <View style={styles.profileBox}>
-        <Icon name="user-circle-o" size={40} color="#3D504C" />
-      </View>
+      {!hasBackButton && (
+        <View style={styles.profileBox}>
+          <UserIcon name="user-circle-o" size={40} color="#678983" />
+        </View>
+      )}
     </View>
   );
 };
@@ -23,7 +36,8 @@ export default HeaderScreen;
 
 const styles = StyleSheet.create({
   container: {
-    height: 100,
+    marginTop: 10,
+    minHeight: 100,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -43,5 +57,9 @@ const styles = StyleSheet.create({
   profileBox: {
     flex: 1,
     alignItems: 'center',
+  },
+  withBackButton: {
+    paddingTop: 30,
+    gap: 20,
   },
 });
