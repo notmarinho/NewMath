@@ -5,6 +5,7 @@ import ForumCardList from '../../../components/ForumCardList/ForumCardList';
 import Icon from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
 import {AppScreenProps} from '../../types';
+import firestore from '@react-native-firebase/firestore';
 
 const initialCardList = [
   {
@@ -26,16 +27,30 @@ const Forum: FC<ScreenProps> = () => {
   const onAddPress = () => navigation.navigate('CreateForumTopic');
 
   useEffect(() => {
-    if (search) {
-      const filteredData = initialCardList.filter(
-        card =>
-          card.title.toLowerCase().includes(search.toLowerCase()) ||
-          card.description.toLowerCase().includes(search.toLowerCase()),
-      );
-      setFilteredCardList(filteredData);
-    } else {
-      setFilteredCardList(initialCardList);
-    }
+    const fetchTopics = async () => {
+      try {
+        const snapshot = await firestore().collection('topics').get();
+        const topicsList = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        if (search) {
+          const filteredData = topicsList.filter(
+            card =>
+              card.title.toLowerCase().includes(search.toLowerCase()) ||
+              card.description.toLowerCase().includes(search.toLowerCase()),
+          );
+          setFilteredCardList(filteredData);
+        } else {
+          setFilteredCardList(topicsList);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar tópicos: ', error);
+      }
+    };
+
+    fetchTopics();
   }, [search]);
 
   return (

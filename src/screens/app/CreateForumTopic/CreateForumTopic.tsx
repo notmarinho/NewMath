@@ -1,18 +1,45 @@
+import React, {FC, useState} from 'react';
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {FC, useState} from 'react';
+import firestore from '@react-native-firebase/firestore';
 import {Background, HeaderScreen} from '../../../components';
+import {useNavigation} from '@react-navigation/native';
 
 type Props = {};
 
-const CreateForumTopic: FC<Props> = ({theme}) => {
+const CreateForumTopic: FC<Props> = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const navigation = useNavigation();
+
+  const postTopic = async () => {
+    if (title.trim() === '' || description.trim() === '') {
+      Alert.alert('Por favor, preencha todos os campos.');
+      return;
+    }
+
+    try {
+      await firestore().collection('topics').add({
+        title,
+        description,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+
+      setTitle('');
+      setDescription('');
+      Alert.alert('Tópico postado com sucesso!');
+      navigation.goBack();
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Ocorreu um erro ao postar o tópico.');
+    }
+  };
 
   return (
     <Background>
@@ -40,7 +67,7 @@ const CreateForumTopic: FC<Props> = ({theme}) => {
           />
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={postTopic}>
           <Text style={styles.buttonText}>Postar</Text>
         </TouchableOpacity>
       </View>
