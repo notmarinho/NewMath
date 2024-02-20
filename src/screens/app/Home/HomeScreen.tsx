@@ -1,11 +1,12 @@
-import {StyleSheet, View, TouchableOpacity, SectionList} from 'react-native';
+import {StyleSheet, View, SectionList} from 'react-native';
 import React, {FC, useMemo} from 'react';
 
 import {AppScreenProps} from '../../types';
 import {useTheme, IconButton, Button} from 'react-native-paper';
 import {useAuth} from '../../../context';
-import {Text} from '../../../components';
+import {SubjectItemCard, Text} from '../../../components';
 import {useQuestions} from '../../../hooks';
+import {Image} from 'react-native';
 
 type ScreenProps = AppScreenProps<'Home'>;
 
@@ -33,16 +34,26 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
     return 0;
   }, [userData]);
 
-  const percentage = (
-    (allQuestionsAnsweredCount / allQuestionsCount) *
-    100
-  ).toFixed(0);
+  const percentage = useMemo(() => {
+    if (isNaN(allQuestionsAnsweredCount) || isNaN(allQuestionsCount)) {
+      return 0;
+    }
+
+    return ((allQuestionsAnsweredCount / allQuestionsCount) * 100).toFixed(0);
+  }, [allQuestionsAnsweredCount, allQuestionsCount]);
 
   return (
     <View
       style={[styles.container, {backgroundColor: theme.colors.background}]}>
       <View style={styles.userHeaderContainer}>
-        <View style={styles.userHeaderPhoto} />
+        <View style={styles.userHeaderPhoto}>
+          <Image
+            source={{
+              uri: 'https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
+            }}
+            style={{flex: 1}}
+          />
+        </View>
         <Text style={styles.userHeaderName}>{userData?.name}</Text>
         <IconButton
           icon="cog"
@@ -86,55 +97,7 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
                 ),
               }))}
               keyExtractor={(item, index) => `${item}-${index}`}
-              renderItem={({item}) => {
-                const totalQuestions = item.questions.length;
-                const completedQuestions =
-                  userData?.answers_ids.filter(id =>
-                    item.questions.map(question => question.id).includes(id),
-                  ).length || 0;
-
-                const percentage = (
-                  (completedQuestions / totalQuestions) *
-                  100
-                ).toFixed(0);
-
-                const isCompleted = !!userData?.finished_subjects_ids.includes(
-                  item.id,
-                );
-
-                return (
-                  <TouchableOpacity
-                    disabled={isCompleted}
-                    onPress={() =>
-                      navigation.navigate('Questionary', {
-                        subject_id: item.id,
-                      })
-                    }
-                    style={styles.subjectItem}>
-                    <View
-                      style={[
-                        styles.subjectItemBox,
-                        {backgroundColor: theme.colors.primary},
-                      ]}>
-                      <Text style={{color: theme.colors.onPrimaryContainer}}>
-                        {isCompleted && '✅'}
-                      </Text>
-                    </View>
-
-                    <Text
-                      style={[
-                        {
-                          color: theme.colors.onPrimaryContainer,
-                        },
-                        styles.subjectItemText,
-                        isCompleted && styles.completedItemText,
-                      ]}>
-                      {item.title}
-                    </Text>
-                    <Text>{isCompleted ? '100%' : `${percentage}%`}</Text>
-                  </TouchableOpacity>
-                );
-              }}
+              renderItem={({item}) => <SubjectItemCard subject={item} />}
               renderSectionHeader={({section: {title}}) => (
                 <Text style={styles.sectionHeaderTitle}>{title}</Text>
               )}
@@ -164,14 +127,16 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   userHeaderContainer: {
+    paddingTop: 24,
     flexDirection: 'row',
     alignItems: 'center',
   },
   userHeaderPhoto: {
-    width: 45,
-    height: 45,
-    borderRadius: 25,
+    width: 50,
+    aspectRatio: 1,
+    borderRadius: 30,
     borderWidth: 1,
+    overflow: 'hidden',
   },
   userHeaderName: {
     fontWeight: 'bold',
@@ -182,14 +147,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingTop: 20,
-  },
-  subjectItem: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 12,
-    height: 44,
-    alignItems: 'center',
   },
   totalPercentageContainer: {
     width: 90,
@@ -221,22 +178,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 10,
     paddingHorizontal: 12,
-  },
-  subjectItemText: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  completedItemText: {
-    textDecorationLine: 'line-through',
-    fontWeight: '400',
-  },
-  subjectItemBox: {
-    width: 35,
-    aspectRatio: 1,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   body: {
     flex: 1,

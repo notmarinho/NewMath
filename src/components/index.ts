@@ -8,3 +8,4 @@ export {default as HeaderScreen} from './HeaderScreen/HeaderScreen';
 export {default as ForumFilter} from './ForumFilter/ForumFilter';
 export {default as Background} from './Background/Background';
 export {default as ProgressBar} from './ProgressBar/ProgressBar';
+export {default as SubjectItemCard} from './SubjectItemCard/SubjectItemCard';
