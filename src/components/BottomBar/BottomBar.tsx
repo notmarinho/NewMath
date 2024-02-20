@@ -64,7 +64,7 @@ const CustomTabBar = ({
       {state.routes.map((route: any, index: number) => {
         const isFocused = state.index === index;
         const icon =
-          route.name === 'Home'
+          route.name === 'HomeStack'
             ? 'home'
             : route.name === 'Onboarding'
             ? 'book'
