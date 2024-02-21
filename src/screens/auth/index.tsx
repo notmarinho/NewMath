@@ -3,7 +3,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignInScreen from './SignIn/SignInScreen';
 import SignUpScreen from './SignUp/SignUpScreen';
 import {AuthStackParamsList, StackScreen} from '../types';
-import {CustomNavigationBar} from '../../components';
 
 const AuthStack = createNativeStackNavigator<AuthStackParamsList>();
 
@@ -21,7 +20,7 @@ const AuthStackScreen = () => {
           name={screen.name}
           component={screen.component}
           options={{
-            header: CustomNavigationBar,
+            headerShown: false,
           }}
         />
       ))}

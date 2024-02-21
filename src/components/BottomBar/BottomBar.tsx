@@ -68,7 +68,7 @@ const CustomTabBar = ({
             ? 'home'
             : route.name === 'AssuntosStack'
             ? 'book'
-            : route.name === 'StartTest'
+            : route.name === 'TestStack'
             ? 'flask'
             : route.name === 'Settings'
             ? 'settings'

@@ -76,7 +76,9 @@ const Questionary = () => {
       return console.error('No question answer found');
     }
 
-    const isCorrect = answer === currentQuestion.answer;
+    const isCorrect =
+      answer.trim().toLocaleLowerCase() ===
+      currentQuestion.answer.trim().toLocaleLowerCase();
 
     if (isCorrect) {
       return true;
