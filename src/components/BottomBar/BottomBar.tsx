@@ -36,7 +36,9 @@ const CustomTabBar = ({
   }, [state.index, animateIcons]);
 
   useEffect(() => {
-    animateSlider(state.index);
+    state.index === 0
+      ? firstAnimateSlider(state.index)
+      : animateSlider(state.index);
   }, [state.index]);
 
   const animateSlider = useCallback(
@@ -53,6 +55,13 @@ const CustomTabBar = ({
     () => createStyles(circleDiameter),
     [circleDiameter, totalWidth],
   );
+
+  const firstAnimateSlider = useCallback(() => {
+    Animated.spring(translating, {
+      toValue: 10,
+      useNativeDriver: true,
+    }).start();
+  }, [totalWidth, marginHorizontal, translating]);
 
   return (
     <View
@@ -72,7 +81,7 @@ const CustomTabBar = ({
             ? 'flask'
             : route.name === 'Settings'
             ? 'settings'
-            : route.name === 'Questionary'
+            : route.name === 'TestStack'
             ? 'pencil-sharp'
             : route.name === 'ForumStack'
             ? 'chatbox-sharp'
