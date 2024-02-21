@@ -1,27 +1,120 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, Image, Alert} from 'react-native';
 import PagerView from 'react-native-pager-view';
-import OpenQuestion from '../OpenQuestion/OpenQuestion';
 import MultipleQuestion from '../MultipleQuestion/MultipleQuestion';
-import {Question} from '../../types';
+import {Subject} from '../../types';
 import {Button, IconButton, useTheme} from 'react-native-paper';
 import {AppImages} from '../../assets';
 import Text from '../Text/Text';
 import {AppScreenProps} from '../../screens/types';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+
+import firestore from '@react-native-firebase/firestore';
+import {useAuth} from '../../context';
+import ProgressBar from '../ProgressBar/ProgressBar';
 
 type NavigationProps = AppScreenProps<'Questionary'>['navigation'];
+type RouteProps = AppScreenProps<'Questionary'>['route'];
 
-const Questionary = ({questions}: {questions: Question[]}) => {
+const Questionary = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProps>();
+  const route = useRoute<RouteProps>();
+  const {user, userData} = useAuth();
+
+  const [subject, setSubject] = React.useState<Subject | null>(null);
   const pagerRef = React.useRef<PagerView>(null);
 
   const [answer, setAnswer] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [numberOfWrongAnswers, setNumberOfWrongAnswers] = React.useState(0);
 
-  const totalQuestions = questions.length;
+  const totalQuestionsCount = subject?.questions.length || 0;
+  const completedQuestionsCount =
+    userData?.answers_ids.filter(id =>
+      subject?.questions.map(question => question.id).includes(id),
+    ).length || 0;
+
+  const pageIndex = completedQuestionsCount;
+  const progress = (completedQuestionsCount / totalQuestionsCount) * 100;
+  const currentQuestion = subject?.questions[pageIndex];
+
+  const finishQuestionary = () => {
+    registerAnswer();
+    firestore()
+      .collection('users')
+      .doc(user?.uid)
+      .set(
+        {
+          finished_subjects_ids: firestore.FieldValue.arrayUnion(subject?.id),
+        },
+        {merge: true},
+      )
+      .then(() => {
+        navigation.goBack();
+      });
+  };
+
+  const registerAnswer = () => {
+    if (!currentQuestion?.id) {
+      return console.error('No question id found');
+    }
+
+    firestore()
+      .collection('users')
+      .doc(user?.uid)
+      .set(
+        {
+          answers_ids: firestore.FieldValue.arrayUnion(currentQuestion.id),
+        },
+        {merge: true},
+      );
+  };
+
+  const validateAnswer = () => {
+    if (!currentQuestion?.answer) {
+      return console.error('No question answer found');
+    }
+
+    const isCorrect = answer === currentQuestion.answer;
+
+    if (isCorrect) {
+      return true;
+    }
+
+    if (numberOfWrongAnswers >= 2) {
+      Alert.alert(
+        `Você errou ${numberOfWrongAnswers} vezes`,
+        'Deseja ver a resposta?',
+        [
+          {
+            text: 'Sim',
+            onPress: () =>
+              Alert.alert('Resposta correta', currentQuestion.answer, [
+                {text: 'OK'},
+              ]),
+          },
+          {text: 'Não', style: 'cancel'},
+        ],
+      );
+      return false;
+    }
+
+    Alert.alert('Resposta incorreta', 'Tente novamente', [{text: 'OK'}]);
+    setNumberOfWrongAnswers(prev => prev + 1);
+    return false;
+  };
+
+  const moveToNextQuestion = () => {
+    registerAnswer();
+    setAnswer('');
+    setNumberOfWrongAnswers(0);
+  };
+
+  useEffect(() => {
+    pagerRef.current?.setPage(completedQuestionsCount);
+    setPage(completedQuestionsCount);
+  }, [completedQuestionsCount]);
 
   const navigateToNextPage = () => {
     if (answer === '') {
@@ -29,56 +122,41 @@ const Questionary = ({questions}: {questions: Question[]}) => {
       return;
     }
 
-    const correctAnswer = questions[page].answer;
-    const isAnswerCorrect = answer === correctAnswer;
+    const isAnswerCorrect = validateAnswer();
 
-    if (page < totalQuestions - 1 && isAnswerCorrect) {
-      pagerRef.current?.setPage(page + 1);
-      setPage(prevPage => prevPage + 1);
-      setAnswer('');
-      setNumberOfWrongAnswers(0);
-    } else {
-      if (numberOfWrongAnswers >= 2) {
-        Alert.alert(
-          `Você errou ${numberOfWrongAnswers} vezes`,
-          'Deseja ver a resposta?',
-          [
-            {
-              text: 'Sim',
-              onPress: () =>
-                Alert.alert('Resposta correta', correctAnswer, [{text: 'OK'}]),
-            },
-            {text: 'Não', style: 'cancel'},
-          ],
-        );
-        return;
+    if (isAnswerCorrect) {
+      const hasMoreQuestions = page < totalQuestionsCount - 1;
+
+      if (hasMoreQuestions) {
+        moveToNextQuestion();
+      } else {
+        finishQuestionary();
       }
-
-      Alert.alert('Resposta incorreta', 'Tente novamente', [{text: 'OK'}]);
-      setNumberOfWrongAnswers(prev => prev + 1);
     }
   };
+
+  useEffect(() => {
+    firestore()
+      .collection('subjects')
+      .doc(route.params.subject_id)
+      .get()
+      .then(res => {
+        const nextSubject = res.data() as Subject;
+        setSubject(nextSubject);
+      });
+  }, [route.params.subject_id]);
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <IconButton icon="close" onPress={navigation.goBack} size={30} />
         <View style={styles.headerCenterContainer}>
-          <Text color="primary" style={styles.pageText}>{`Questão ${
-            page + 1
-          } de ${totalQuestions}`}</Text>
-          <View
-            style={[
-              styles.headerProgressBarContainer,
-              {backgroundColor: theme.colors.primary},
-            ]}>
-            <View
-              style={[
-                styles.headerProgressBar,
-                {backgroundColor: theme.colors.tertiary},
-              ]}
-            />
-          </View>
+          <Text
+            color="primary"
+            style={
+              styles.pageText
+            }>{`Questão ${completedQuestionsCount} de ${totalQuestionsCount}`}</Text>
+          <ProgressBar progress={progress} />
         </View>
 
         <Image
@@ -87,15 +165,14 @@ const Questionary = ({questions}: {questions: Question[]}) => {
           resizeMode="contain"
         />
       </View>
-      <PagerView ref={pagerRef} style={styles.pagerView} initialPage={page}>
-        {questions.map((question, index) => {
+      <PagerView
+        ref={pagerRef}
+        style={styles.pagerView}
+        initialPage={completedQuestionsCount}>
+        {subject?.questions.map((question, index) => {
           return (
             <View key={index} style={styles.page}>
-              {question.type === 'aberta' ? (
-                <OpenQuestion question={question} setAnswer={setAnswer} />
-              ) : (
-                <MultipleQuestion question={question} setAnswer={setAnswer} />
-              )}
+              <MultipleQuestion question={question} setAnswer={setAnswer} />
             </View>
           );
         })}

@@ -1,31 +1,60 @@
-import {StyleSheet, View, FlatList, TouchableOpacity} from 'react-native';
-import React, {FC} from 'react';
+import {StyleSheet, View, SectionList} from 'react-native';
+import React, {FC, useMemo} from 'react';
 
 import {AppScreenProps} from '../../types';
-import {
-  useTheme,
-  IconButton,
-  TouchableRipple,
-  Button,
-} from 'react-native-paper';
+import {useTheme, IconButton, Button} from 'react-native-paper';
 import {useAuth} from '../../../context';
-import {Text} from '../../../components';
+import {SubjectItemCard, Text} from '../../../components';
 import {useQuestions} from '../../../hooks';
+import {Image} from 'react-native';
 
 type ScreenProps = AppScreenProps<'Home'>;
 
 const HomeScreen: FC<ScreenProps> = ({navigation}) => {
   const theme = useTheme();
 
-  const {user} = useAuth();
-  const {levels} = useQuestions();
+  const {userData} = useAuth();
+  const {levels, subjects} = useQuestions();
+
+  const allQuestionsCount = useMemo(() => {
+    if (subjects) {
+      const sanitizedSubjects = subjects.filter(subject => !!subject.questions);
+      return sanitizedSubjects.reduce(
+        (acc, subject) => acc + subject.questions.length,
+        0,
+      );
+    }
+    return 0;
+  }, [subjects]);
+
+  const allQuestionsAnsweredCount = useMemo(() => {
+    if (userData?.answers_ids) {
+      return userData.answers_ids.length;
+    }
+    return 0;
+  }, [userData]);
+
+  const percentage = useMemo(() => {
+    if (isNaN(allQuestionsAnsweredCount) || isNaN(allQuestionsCount)) {
+      return 0;
+    }
+
+    return ((allQuestionsAnsweredCount / allQuestionsCount) * 100).toFixed(0);
+  }, [allQuestionsAnsweredCount, allQuestionsCount]);
 
   return (
     <View
       style={[styles.container, {backgroundColor: theme.colors.background}]}>
       <View style={styles.userHeaderContainer}>
-        <View style={styles.userHeaderPhoto} />
-        <Text style={styles.userHeaderName}>{user?.displayName}</Text>
+        <View style={styles.userHeaderPhoto}>
+          <Image
+            source={{
+              uri: 'https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg',
+            }}
+            style={{flex: 1}}
+          />
+        </View>
+        <Text style={styles.userHeaderName}>{userData?.name}</Text>
         <IconButton
           icon="cog"
           size={26}
@@ -40,7 +69,18 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
             styles.resumeContainer,
             {backgroundColor: theme.colors.primary},
           ]}>
-          <View style={styles.resumeHeader} />
+          <View style={styles.resumeHeader}>
+            <View
+              style={[
+                styles.totalPercentageContainer,
+                {
+                  backgroundColor: theme.colors.background,
+                  borderColor: theme.colors.onSurface,
+                },
+              ]}>
+              <Text style={styles.totalPercentageText}>{percentage}%</Text>
+            </View>
+          </View>
           <View
             style={[
               styles.resumeBody,
@@ -48,38 +88,18 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
                 backgroundColor: theme.colors.background,
               },
             ]}>
-            <FlatList
-              data={levels}
-              contentContainerStyle={styles.listContainer}
-              renderItem={({item}) => (
-                <View>
-                  {item.subjects.map((subject, i) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate('Questionary', {
-                          subject: subject.title,
-                        })
-                      }
-                      key={`${subject.title}-${i}`}
-                      style={styles.subjectItem}>
-                      <View
-                        style={[
-                          styles.subjectItemBox,
-                          {backgroundColor: theme.colors.primary},
-                        ]}
-                      />
-
-                      <Text
-                        style={[
-                          {color: theme.colors.onPrimaryContainer},
-                          styles.subjectItemText,
-                        ]}>
-                        {subject.title}
-                      </Text>
-                      <Text>0%</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+            <SectionList
+              sections={levels.map(level => ({
+                title: level.title,
+                data: subjects.filter(
+                  subject =>
+                    subject.level_id === level.id && !!subject.questions,
+                ),
+              }))}
+              keyExtractor={(item, index) => `${item}-${index}`}
+              renderItem={({item}) => <SubjectItemCard subject={item} />}
+              renderSectionHeader={({section: {title}}) => (
+                <Text style={styles.sectionHeaderTitle}>{title}</Text>
               )}
             />
           </View>
@@ -107,14 +127,16 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   userHeaderContainer: {
+    paddingTop: 24,
     flexDirection: 'row',
     alignItems: 'center',
   },
   userHeaderPhoto: {
-    width: 45,
-    height: 45,
-    borderRadius: 25,
+    width: 50,
+    aspectRatio: 1,
+    borderRadius: 30,
     borderWidth: 1,
+    overflow: 'hidden',
   },
   userHeaderName: {
     fontWeight: 'bold',
@@ -126,25 +148,36 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingTop: 20,
   },
-  subjectItem: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 12,
-    height: 44,
-    alignItems: 'center',
-  },
-  subjectItemText: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  subjectItemBox: {
-    width: 35,
-    aspectRatio: 1,
-    borderRadius: 5,
+  totalPercentageContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 5,
+    shadowColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+    elevation: 11,
+    transform: [
+      {
+        translateY: -45,
+      },
+    ],
+  },
+  totalPercentageText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  sectionHeaderTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    paddingHorizontal: 12,
   },
   body: {
     flex: 1,
@@ -161,7 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     gap: 20,
-    borderWidth: 1,
+    justifyContent: 'flex-end',
   },
   resumeBody: {
     alignSelf: 'stretch',

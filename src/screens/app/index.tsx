@@ -14,6 +14,7 @@ import Settings from './Settings/Settings';
 import ForumTopicOpened from './Forum/ForumTopicOpened/ForumTopicOpened';
 import Assuntos from './Assuntos/Assuntos/Assuntos';
 import WatchScreen from './Assuntos/WatchScreen/WatchScreen';
+import QuestionaryScreen from './Questionary/QuestionaryScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,10 @@ const HomeStack = () => {
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={withTheme(HomeScreen)} />
       <Stack.Screen name="Settings" component={withTheme(Settings)} />
+      <Stack.Screen
+        name="Questionary"
+        component={withTheme(QuestionaryScreen)}
+      />
     </Stack.Navigator>
   );
 };

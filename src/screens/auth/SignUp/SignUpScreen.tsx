@@ -78,7 +78,8 @@ const SignUpScreen = () => {
     firestore().collection('users').doc(nextUser.user.uid).set({
       name,
       email,
-      levels_completed: [],
+      finished_subjects_ids: [],
+      answers_ids: [],
     });
 
     nextUser.user.updateProfile({
