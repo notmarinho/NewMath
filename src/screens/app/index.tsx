@@ -12,6 +12,8 @@ import Forum from './Forum/Forum/Forum';
 import CreateForumTopic from './Forum/CreateForumTopic/CreateForumTopic';
 import Settings from './Settings/Settings';
 import ForumTopicOpened from './Forum/ForumTopicOpened/ForumTopicOpened';
+import Assuntos from './Assuntos/Assuntos/Assuntos';
+import WatchScreen from './Assuntos/WatchScreen/WatchScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -45,6 +47,17 @@ const ForumStack = () => {
   );
 };
 
+const AssuntosStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="AssuntosStack"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Assuntos" component={withTheme(Assuntos)} />
+      <Stack.Screen name="WatchScreen" component={withTheme(WatchScreen)} />
+    </Stack.Navigator>
+  );
+};
+
 const AppStackScreens = () => {
   return (
     <Tab.Navigator
@@ -52,7 +65,7 @@ const AppStackScreens = () => {
       initialRouteName="Home"
       screenOptions={{headerShown: false}}>
       <Tab.Screen name="HomeStack" component={HomeStack} />
-      <Tab.Screen name="Onboarding" component={withTheme(Onboarding)} />
+      <Tab.Screen name="AssuntosStack" component={AssuntosStack} />
       <Tab.Screen name="ForumStack" component={ForumStack} />
       <Tab.Screen name="StartTest" component={withTheme(StartTest)} />
     </Tab.Navigator>

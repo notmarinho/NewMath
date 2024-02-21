@@ -66,7 +66,7 @@ const CustomTabBar = ({
         const icon =
           route.name === 'HomeStack'
             ? 'home'
-            : route.name === 'Onboarding'
+            : route.name === 'AssuntosStack'
             ? 'book'
             : route.name === 'StartTest'
             ? 'flask'
