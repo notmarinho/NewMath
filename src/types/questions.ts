@@ -1,19 +1,13 @@
-export type OpenQuestion = {
-  type: 'aberta';
+export type Question = {
   answer: string;
-  title: string;
-};
-
-export type MultipleChoiceQuestion = {
-  type: 'multipla';
-  answer: string;
-  title: string;
   options: string[];
+  title: string;
+  type: 'fechada';
+  id: string;
 };
 
-type Question = OpenQuestion | MultipleChoiceQuestion;
-
-type Subject = {
+export type Subject = {
+  id: string;
   title: string;
   questions: Question[];
 };
