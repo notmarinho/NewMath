@@ -170,6 +170,7 @@ const ForumTopicOpened: FC<ForumTopicOpenedProps> = ({route}) => {
         </View>
         {/* FlatList de comentários */}
         <FlatList
+          contentContainerStyle={styles.flatListContainer}
           data={comments}
           keyExtractor={item => item.id}
           renderItem={({item}) => (
@@ -199,6 +200,10 @@ const ForumTopicOpened: FC<ForumTopicOpenedProps> = ({route}) => {
 export default ForumTopicOpened;
 
 const styles = StyleSheet.create({
+  flatListContainer: {
+    paddingBottom: 300,
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'flex-start',
