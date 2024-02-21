@@ -17,6 +17,7 @@ import WatchScreen from './Assuntos/WatchScreen/WatchScreen';
 import QuestionaryScreen from './Questionary/QuestionaryScreen';
 import FirstTest from './FirstTest/FirstTest';
 import FirstTestResult from './FirstTestResult/FirstTestResult';
+import {useAuth} from '../../context';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -67,9 +68,11 @@ const AssuntosStack = () => {
 };
 
 const TestStack = () => {
+  const {userData} = useAuth();
+
   return (
     <StartStack.Navigator
-      initialRouteName="StartTest"
+      initialRouteName={userData?.first_access ? 'Onboarding' : 'StartTest'}
       screenOptions={{headerShown: false}}>
       <StartStack.Screen name="StartTest" component={withTheme(StartTest)} />
       <StartStack.Screen name="FirstTest" component={withTheme(FirstTest)} />
@@ -77,11 +80,18 @@ const TestStack = () => {
         name="FirstTestResult"
         component={withTheme(FirstTestResult)}
       />
+      <StartStack.Screen name="Onboarding" component={withTheme(Onboarding)} />
     </StartStack.Navigator>
   );
 };
 
 const AppStackScreens = () => {
+  const {userData} = useAuth();
+
+  if (userData?.first_access) {
+    return <TestStack />;
+  }
+
   return (
     <Tab.Navigator
       tabBar={props => <CustomTabBar {...props} />}

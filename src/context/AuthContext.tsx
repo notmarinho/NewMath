@@ -13,6 +13,8 @@ type UserData = {
   email: string;
   finished_subjects_ids: string[];
   answers_ids: string[];
+  first_access: boolean;
+  to_study: string[];
 };
 
 type AuthContextType = {

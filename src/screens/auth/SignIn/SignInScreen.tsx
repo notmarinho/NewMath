@@ -6,6 +6,7 @@ import auth from '@react-native-firebase/auth';
 import {AppError} from '../../../types';
 
 import logoImage from '../../../assets/images/logo.png';
+import {Background} from '../../../components';
 
 type ScreenProps = AuthScreenProps<'SignIn'>;
 
@@ -84,7 +85,7 @@ const SignInScreen: FC<ScreenProps> = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <Background style={styles.container}>
       <Image source={logoImage} />
       <View style={styles.inputsContainer}>
         <TextInput
@@ -126,7 +127,7 @@ const SignInScreen: FC<ScreenProps> = ({navigation}) => {
           Registrar
         </Button>
       </View>
-    </View>
+    </Background>
   );
 };
 

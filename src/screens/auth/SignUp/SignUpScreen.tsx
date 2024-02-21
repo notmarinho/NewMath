@@ -80,6 +80,7 @@ const SignUpScreen = () => {
       email,
       finished_subjects_ids: [],
       answers_ids: [],
+      first_access: true,
     });
 
     nextUser.user.updateProfile({

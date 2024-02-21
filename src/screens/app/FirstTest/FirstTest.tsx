@@ -20,20 +20,21 @@ const FirstTest = () => {
   const totalQuestions = firstTestQuestions.length;
   const progress = (page / totalQuestions) * 100;
 
+  console.log(wrongSubjects);
+
   const checkAnswer = () => {
     const currentQuestion = firstTestQuestions[page];
-    if (currentQuestion.answer !== answer) {
-      setWrongSubjects([...wrongSubjects, currentQuestion.subject]);
-    }
-    navigateToNextQuestion();
-  };
+    let auxWrongSubjects = [...wrongSubjects];
 
-  const navigateToNextQuestion = () => {
+    if (currentQuestion.answer !== answer) {
+      auxWrongSubjects.push(currentQuestion.subject);
+    }
     if (page < totalQuestions - 1) {
       pagerRef.current?.setPage(page + 1);
       setPage(page + 1);
+      setWrongSubjects(auxWrongSubjects);
     } else {
-      navigation.navigate('FirstTestResult', {wrongSubjects});
+      navigation.navigate('FirstTestResult', {wrongSubjects: auxWrongSubjects});
     }
   };
 
