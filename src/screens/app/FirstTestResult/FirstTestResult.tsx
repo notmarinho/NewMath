@@ -12,9 +12,12 @@ const FirstTestResult = ({route, navigation}) => {
   const wrongSubjects = route.params.wrongSubjects as string[];
 
   const wrongSubjectsCount = wrongSubjects.length;
-  const percentage = ((wrongSubjectsCount / NUMBER_OF_QUESTIONS) * 100).toFixed(
-    2,
-  );
+  const correctSubjectsCount = NUMBER_OF_QUESTIONS - wrongSubjectsCount;
+
+  const percentage = (
+    (correctSubjectsCount / NUMBER_OF_QUESTIONS) *
+    100
+  ).toFixed(2);
 
   const theme = useTheme();
 
