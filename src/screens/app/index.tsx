@@ -13,9 +13,12 @@ import CreateForumTopic from './Forum/CreateForumTopic/CreateForumTopic';
 import Settings from './Settings/Settings';
 import ForumTopicOpened from './Forum/ForumTopicOpened/ForumTopicOpened';
 import QuestionaryScreen from './Questionary/QuestionaryScreen';
+import FirstTest from './FirstTest/FirstTest';
+import FirstTestResult from './FirstTestResult/FirstTestResult';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const StartStack = createNativeStackNavigator();
 
 const HomeStack = () => {
   return (
@@ -50,6 +53,21 @@ const ForumStack = () => {
   );
 };
 
+const TestStack = () => {
+  return (
+    <StartStack.Navigator
+      initialRouteName="StartTest"
+      screenOptions={{headerShown: false}}>
+      <StartStack.Screen name="StartTest" component={withTheme(StartTest)} />
+      <StartStack.Screen name="FirstTest" component={withTheme(FirstTest)} />
+      <Stack.Screen
+        name="FirstTestResult"
+        component={withTheme(FirstTestResult)}
+      />
+    </StartStack.Navigator>
+  );
+};
+
 const AppStackScreens = () => {
   return (
     <Tab.Navigator
@@ -59,7 +77,7 @@ const AppStackScreens = () => {
       <Tab.Screen name="HomeStack" component={HomeStack} />
       <Tab.Screen name="Onboarding" component={withTheme(Onboarding)} />
       <Tab.Screen name="ForumStack" component={ForumStack} />
-      <Tab.Screen name="StartTest" component={withTheme(StartTest)} />
+      <Tab.Screen name="TestStack" component={TestStack} />
     </Tab.Navigator>
   );
 };
