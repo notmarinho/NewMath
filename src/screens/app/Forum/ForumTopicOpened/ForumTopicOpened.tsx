@@ -102,6 +102,35 @@ const ForumTopicOpened: FC<ForumTopicOpenedProps> = ({route}) => {
     return () => unsubscribe(); // Isso desinscreve do listener quando o componente é desmontado
   }, [item.id]);
 
+  const getTimeDifference = createdAt => {
+    if (!createdAt) {
+      return 'Data não disponível';
+    }
+
+    const now = new Date();
+    const postDate = createdAt.toDate(); // Converte para objeto Date se necessário
+    const difference = now.getTime() - postDate.getTime(); // Diferença em milissegundos
+
+    const minutesAgo = Math.floor(difference / (1000 * 60)); // Convertendo para minutos
+
+    if (minutesAgo < 1) {
+      return 'Agora mesmo';
+    } else if (minutesAgo < 60) {
+      return `${minutesAgo} min atrás`;
+    } else if (minutesAgo < 1440) {
+      return `${Math.floor(minutesAgo / 60)} h atrás`;
+    } else {
+      // Para diferenças maiores, retorne a data completa
+      return postDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+  };
+
   return (
     <Background style={styles.container}>
       <HeaderScreen title="Tópico" hasBackButton />
@@ -149,9 +178,7 @@ const ForumTopicOpened: FC<ForumTopicOpenedProps> = ({route}) => {
               <Text style={styles.commentText}>{item.text}</Text>
               <View style={styles.footerComment}>
                 <Text style={styles.textDate}>
-                  {item?.createdAt
-                    ? item.createdAt.toDate().toLocaleDateString()
-                    : 'Data não disponível'}
+                  {getTimeDifference(item.createdAt)}
                 </Text>
                 {item.userId === userUid && (
                   <TouchableOpacity
@@ -259,5 +286,6 @@ const styles = StyleSheet.create({
   },
   textDate: {
     color: '#678983', // Escolha uma cor para a data
+    paddingBottom: 5,
   },
 });
