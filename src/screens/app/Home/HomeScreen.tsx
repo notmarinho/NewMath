@@ -70,11 +70,21 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
             {backgroundColor: theme.colors.primary},
           ]}>
           <View style={styles.resumeHeader}>
-            <Icon
-              source="chart-bar"
-              size={26}
-              color={theme.colors.background}
-            />
+            <View style={{flexDirection: 'row', gap: 8}}>
+              <Icon
+                source="chart-bar"
+                size={26}
+                color={theme.colors.background}
+              />
+              <Text
+                style={[
+                  {color: theme.colors.background},
+                  styles.titleExercicios,
+                ]}>
+                Exercícios
+              </Text>
+            </View>
+
             <View
               style={[
                 styles.totalPercentageContainer,
@@ -130,6 +140,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 20,
+  },
+  titleExercicios: {
+    transform: [{translateY: 2}],
+    fontWeight: 'bold',
+    fontSize: 18,
   },
   userHeaderContainer: {
     paddingTop: 24,
