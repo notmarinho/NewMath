@@ -2,7 +2,7 @@ import {StyleSheet, View, SectionList} from 'react-native';
 import React, {FC, useMemo} from 'react';
 
 import {AppScreenProps} from '../../types';
-import {useTheme, IconButton, Button} from 'react-native-paper';
+import {useTheme, IconButton, Button, Icon} from 'react-native-paper';
 import {useAuth} from '../../../context';
 import {SubjectItemCard, Text} from '../../../components';
 import {useQuestions} from '../../../hooks';
@@ -70,6 +70,11 @@ const HomeScreen: FC<ScreenProps> = ({navigation}) => {
             {backgroundColor: theme.colors.primary},
           ]}>
           <View style={styles.resumeHeader}>
+            <Icon
+              source="chart-bar"
+              size={26}
+              color={theme.colors.background}
+            />
             <View
               style={[
                 styles.totalPercentageContainer,
@@ -194,7 +199,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     gap: 20,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   resumeBody: {
     alignSelf: 'stretch',
