@@ -33,7 +33,11 @@ const StartTest: FC<ScreenProps> = ({navigation}) => {
           Math.
         </Text>
         <View style={styles.buttonsContainer}>
-          <Button mode="contained">Realizar o Teste</Button>
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate('FirstTest')}>
+            Realizar o Teste
+          </Button>
           <Button mode="text" onPress={() => navigation.navigate('Home')}>
             Fazer Depois
           </Button>
