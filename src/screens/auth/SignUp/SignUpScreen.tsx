@@ -13,7 +13,6 @@ import {AppError} from '../../../types';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-import {Button} from 'react-native-paper';
 import {Background, HeaderScreen} from '../../../components';
 
 type FormError = {
@@ -23,21 +22,23 @@ type FormError = {
   app: AppError;
 };
 
+const initialFormError: FormError = {
+  name: null,
+  email: null,
+  password: null,
+  app: null,
+};
+
 const SignUpScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
-  const [formsErrors, setFormsErrors] = useState<FormError>({
-    name: null,
-    email: null,
-    password: null,
-    app: null,
-  });
+  const [formsErrors, setFormsErrors] = useState<FormError>(initialFormError);
   const [isLoading, setIsLoading] = useState(false);
 
   const validation = () => {
-    const nextFormsErrors = {...formsErrors};
+    const nextFormsErrors = {...initialFormError};
 
     if (!email) {
       nextFormsErrors.email = 'Insira um email válido';
