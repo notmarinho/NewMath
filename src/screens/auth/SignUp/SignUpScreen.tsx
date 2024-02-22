@@ -5,6 +5,7 @@ import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 import {Button, TextInput} from 'react-native-paper';
+import {Background} from '../../../components';
 
 type FormError = {
   name: AppError;
@@ -99,49 +100,51 @@ const SignUpScreen = () => {
   };
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}>
-      <View style={styles.inputsContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Nome"
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="words"
-          error={!!formsErrors.name}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="E-mail"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          error={!!formsErrors.email}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          error={!!formsErrors.password}
-        />
-      </View>
-      {formsErrors.app && (
-        <Text style={styles.errorText}>{formsErrors.app}</Text>
-      )}
-      <Button
-        onPress={validation}
-        loading={isLoading}
-        disabled={isLoading}
-        contentStyle={styles.button}
-        mode="contained">
-        {!isLoading ? 'Cadastrar' : 'Registrando...'}
-      </Button>
-    </ScrollView>
+    <Background>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+        <View style={styles.inputsContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Nome"
+            value={name}
+            onChangeText={setName}
+            autoCapitalize="words"
+            error={!!formsErrors.name}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="E-mail"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            error={!!formsErrors.email}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Senha"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            error={!!formsErrors.password}
+          />
+        </View>
+        {formsErrors.app && (
+          <Text style={styles.errorText}>{formsErrors.app}</Text>
+        )}
+        <Button
+          onPress={validation}
+          loading={isLoading}
+          disabled={isLoading}
+          contentStyle={styles.button}
+          mode="contained">
+          {!isLoading ? 'Cadastrar' : 'Registrando...'}
+        </Button>
+      </ScrollView>
+    </Background>
   );
 };
 
