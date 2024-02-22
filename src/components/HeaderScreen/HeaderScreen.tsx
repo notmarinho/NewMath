@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // marginBottom: 20,
+    marginBottom: 20,
   },
   text: {
     fontSize: 30,
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
   },
   withBackButton: {
     // height: 100,
-    marginBottom: 20,
     paddingTop: 30,
     gap: 20,
   },

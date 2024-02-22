@@ -114,8 +114,8 @@ const SignUpScreen = () => {
         keyboardShouldPersistTaps="handled"
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        <HeaderScreen hasBackButton />
         <View style={styles.inputsContainer}>
+          <HeaderScreen hasBackButton />
           <Image
             source={require('../../../assets/images/logo.png')}
             style={{width: 200, height: 100, alignSelf: 'center'}}
@@ -173,8 +173,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   contentContainer: {
-    flex: 1,
-
     gap: 12,
   },
   inputsContainer: {
