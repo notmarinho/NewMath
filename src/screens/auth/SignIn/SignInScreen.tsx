@@ -1,7 +1,7 @@
 import {Image, StyleSheet, View} from 'react-native';
 import React, {FC, useState} from 'react';
 import {AuthScreenProps} from '../../types';
-import {Button, HelperText, TextInput} from 'react-native-paper';
+import {Button, HelperText, TextInput, useTheme} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import {AppError} from '../../../types';
 
@@ -23,6 +23,8 @@ const emptyFormError: FormError = {
 };
 
 const SignInScreen: FC<ScreenProps> = ({navigation}) => {
+  const theme = useTheme();
+
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -86,46 +88,74 @@ const SignInScreen: FC<ScreenProps> = ({navigation}) => {
 
   return (
     <Background style={styles.container}>
-      <Image source={logoImage} />
-      <View style={styles.inputsContainer}>
-        <TextInput
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          textContentType="emailAddress"
-          mode="outlined"
-          error={!!formError.email}
-        />
-        <TextInput
-          label="Senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoCapitalize="none"
-          textContentType="password"
-          mode="outlined"
-          error={!!formError.password}
-        />
-      </View>
-      <HelperText type="error" visible={!!formError.app}>
-        {formError.app}
-      </HelperText>
-      <View style={styles.buttonsContainer}>
-        <Button
-          mode="contained"
-          onPress={validation}
-          loading={isLoading}
-          contentStyle={styles.button}>
-          Entrar
-        </Button>
-        <Button
-          mode="text"
-          onPress={() => navigation.navigate('SignUp')}
-          contentStyle={styles.button}>
-          Registrar
-        </Button>
+      <View
+        style={[
+          styles.backgroundSquare,
+          {
+            backgroundColor: theme.colors.tertiary,
+          },
+        ]}
+      />
+      <View style={styles.contentContainer}>
+        <View
+          style={[
+            styles.formContainer,
+            {
+              backgroundColor: theme.colors.background,
+            },
+          ]}>
+          <Image
+            source={logoImage}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+          <View style={styles.inputsContainer}>
+            <TextInput
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              textContentType="emailAddress"
+              mode="outlined"
+              error={!!formError.email}
+              theme={{
+                roundness: 15,
+              }}
+            />
+            <TextInput
+              label="Senha"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              autoCapitalize="none"
+              textContentType="password"
+              mode="outlined"
+              error={!!formError.password}
+              theme={{
+                roundness: 15,
+              }}
+            />
+          </View>
+          <HelperText type="error" visible={!!formError.app}>
+            {formError.app}
+          </HelperText>
+          <View style={styles.buttonsContainer}>
+            <Button
+              mode="contained"
+              onPress={validation}
+              loading={isLoading}
+              contentStyle={styles.button}>
+              Entrar
+            </Button>
+            <Button
+              mode="text"
+              onPress={() => navigation.navigate('SignUp')}
+              contentStyle={styles.button}>
+              Cadastre-se
+            </Button>
+          </View>
+        </View>
       </View>
     </Background>
   );
@@ -136,10 +166,44 @@ export default SignInScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 12,
+  },
+  backgroundSquare: {
+    height: '50%',
+    position: 'absolute',
+    width: '100%',
+    alignSelf: 'flex-start',
+    zIndex: 3,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  contentContainer: {
+    flex: 1,
+    zIndex: 6,
+    justifyContent: 'center',
+    borderWidth: 1,
+    alignSelf: 'stretch',
+    paddingHorizontal: 20,
+  },
+  logoImage: {
+    width: 200,
+    height: 120,
+    alignSelf: 'center',
+  },
+  formContainer: {
+    width: '100%',
+    padding: 20,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.44,
+    shadowRadius: 10.32,
+
+    elevation: 16,
   },
   inputsContainer: {
     alignSelf: 'stretch',
