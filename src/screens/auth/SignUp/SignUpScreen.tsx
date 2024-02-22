@@ -1,10 +1,20 @@
-import {Keyboard, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Keyboard,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {AppError} from '../../../types';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-import {Button, TextInput} from 'react-native-paper';
+import {Button} from 'react-native-paper';
+import {Background, HeaderScreen} from '../../../components';
 
 type FormError = {
   name: AppError;
@@ -99,49 +109,59 @@ const SignUpScreen = () => {
   };
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}>
-      <View style={styles.inputsContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Nome"
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="words"
-          error={!!formsErrors.name}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="E-mail"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          error={!!formsErrors.email}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          error={!!formsErrors.password}
-        />
-      </View>
-      {formsErrors.app && (
-        <Text style={styles.errorText}>{formsErrors.app}</Text>
-      )}
-      <Button
-        onPress={validation}
-        loading={isLoading}
-        disabled={isLoading}
-        contentStyle={styles.button}
-        mode="contained">
-        {!isLoading ? 'Cadastrar' : 'Registrando...'}
-      </Button>
-    </ScrollView>
+    <Background>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+        <HeaderScreen hasBackButton />
+        <View style={styles.inputsContainer}>
+          <Image
+            source={require('../../../assets/images/logo.png')}
+            style={{width: 200, height: 100, alignSelf: 'center'}}
+          />
+          <Text style={styles.title}>Criar conta</Text>
+          <Text style={styles.subTitle}>Seja bem-vindo(a)</Text>
+
+          <TextInput
+            style={[styles.input, !!formsErrors.name && styles.inputErrorStyle]}
+            placeholder="Nome"
+            value={name}
+            onChangeText={setName}
+            autoCapitalize="words"
+          />
+          <TextInput
+            style={[
+              styles.input,
+              !!formsErrors.email && styles.inputErrorStyle,
+            ]}
+            placeholder="E-mail"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={[
+              styles.input,
+              !!formsErrors.password && styles.inputErrorStyle,
+            ]}
+            placeholder="Senha"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          {formsErrors.app && (
+            <Text style={styles.errorText}>{formsErrors.app}</Text>
+          )}
+          <Pressable onPress={validation} style={styles.button}>
+            <Text style={styles.buttonText}>
+              {!isLoading ? 'Cadastrar' : 'Registrando...'}
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </Background>
   );
 };
 
@@ -149,32 +169,71 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 12,
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
+
     gap: 12,
   },
   inputsContainer: {
     gap: 8,
-    alignSelf: 'stretch',
   },
   input: {
-    borderWidth: 1,
-    alignSelf: 'stretch',
-    backgroundColor: '#f8f8f8',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    color: '#303030',
-    borderColor: '#e8e8e8',
-    height: 54,
+    borderWidth: 2,
+    width: '80%',
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 25,
+    paddingHorizontal: 5,
+    color: '#949494',
+    fontWeight: 'bold',
+    borderColor: '#678983',
+    textAlign: 'center',
   },
   errorText: {
     textAlign: 'center',
     color: 'red',
   },
   button: {
-    height: 54,
+    height: 45,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#678983',
+    alignSelf: 'center',
+    width: '80%',
+    marginTop: 40,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 2,
+  },
+  inputErrorStyle: {
+    borderColor: 'red',
+  },
+  buttonText: {
+    color: '#F2EAD3',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  title: {
+    fontSize: 35,
+    fontWeight: '500',
+    textAlign: 'center',
+    color: '#678983',
+  },
+  subTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#678983',
+    marginBottom: 20,
   },
 });

@@ -6,7 +6,7 @@ import UserIcon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 
 type Props = {
-  title: string;
+  title?: string;
   hasBackButton?: boolean;
 };
 
@@ -37,11 +37,11 @@ export default HeaderScreen;
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
-    minHeight: 100,
+    // minHeight: 100,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   text: {
     fontSize: 30,
@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   withBackButton: {
+    height: 100,
+
     paddingTop: 30,
     gap: 20,
   },
