@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
     zIndex: 6,
     justifyContent: 'center',
-    borderWidth: 1,
+
     alignSelf: 'stretch',
     paddingHorizontal: 20,
   },
