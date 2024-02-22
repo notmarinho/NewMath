@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   withBackButton: {
-    height: 100,
-
+    // height: 100,
+    marginBottom: 20,
     paddingTop: 30,
     gap: 20,
   },
